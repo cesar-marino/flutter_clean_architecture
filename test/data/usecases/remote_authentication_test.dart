@@ -14,19 +14,19 @@ void main() {
   HttpCLientMock httpClient;
   String url;
   RemoteAuthentication sut;
+  AuthenticationParams params;
 
   setUp(() {
     httpClient = HttpCLientMock();
     url = faker.internet.httpUrl();
     sut = RemoteAuthentication(httpClient: httpClient, url: url);
-  });
-
-  test('Shold call HttClient with correct URL', () async {
-    final params = AuthenticationParams(
+    params = AuthenticationParams(
       email: faker.internet.email(),
       password: faker.internet.password(),
     );
+  });
 
+  test('Shold call HttClient with correct URL', () async {
     await sut.auth(params);
 
     verify(httpClient.request(
@@ -42,11 +42,6 @@ void main() {
       method: anyNamed('method'),
       body: anyNamed('body'),
     )).thenThrow(HttpError.badRequest);
-
-    final params = AuthenticationParams(
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-    );
 
     final future = sut.auth(params);
     expect(future, throwsA(DomainError.unexpected));
