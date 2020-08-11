@@ -27,6 +27,17 @@ void main() {
   });
 
   test('Shold call HttClient with correct URL', () async {
+    when(httpClient.request(
+      url: anyNamed('url'),
+      method: anyNamed('method'),
+      body: anyNamed('body'),
+    )).thenAnswer(
+      (_) async => {
+        'accessToken': faker.guid.guid(),
+        'name': faker.person.name(),
+      },
+    );
+
     await sut.auth(params);
 
     verify(httpClient.request(
@@ -69,7 +80,8 @@ void main() {
     expect(future, throwsA(DomainError.unexpected));
   });
 
-  test('Shold throw InvalidCredentialsError if HttpClient return 401', () async {
+  test('Shold throw InvalidCredentialsError if HttpClient return 401',
+      () async {
     when(httpClient.request(
       url: anyNamed('url'),
       method: anyNamed('method'),
@@ -78,5 +90,22 @@ void main() {
 
     final future = sut.auth(params);
     expect(future, throwsA(DomainError.invalidCredentials));
+  });
+
+  test('Shold return Account if HttpClient return 200', () async {
+    final accessToken = faker.guid.guid();
+    when(httpClient.request(
+      url: anyNamed('url'),
+      method: anyNamed('method'),
+      body: anyNamed('body'),
+    )).thenAnswer(
+      (_) async => {
+        'accessToken': accessToken,
+        'name': faker.person.name(),
+      },
+    );
+
+    final account = await sut.auth(params);
+    expect(account.token, accessToken);
   });
 }
