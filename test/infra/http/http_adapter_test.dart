@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
