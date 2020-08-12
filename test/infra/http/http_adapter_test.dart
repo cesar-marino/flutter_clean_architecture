@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -25,12 +27,18 @@ class HttpAdapter {
 class ClientMock extends Mock implements Client {}
 
 void main() {
+  HttpAdapter sut;
+  ClientMock client;
+  String url;
+
+  setUp(() {
+    client = ClientMock();
+    sut = HttpAdapter(client);
+    url = faker.internet.httpUrl();
+  });
+
   group('post', () {
     test('Shuld call post with correct values', () async {
-      final client = ClientMock();
-      final sut = HttpAdapter(client);
-      final url = faker.internet.httpUrl();
-
       await sut.request(url: url, method: 'post');
 
       verify(client.post(url, headers: {
