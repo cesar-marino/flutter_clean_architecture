@@ -1,5 +1,6 @@
 abstract class LoginPresenter {
-  void validateEmail(String email);
+  Stream<String> emailErrorStream;
 
+  void validateEmail(String email);
   void validatePassword(String password);
 }
