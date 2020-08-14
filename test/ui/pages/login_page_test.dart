@@ -13,11 +13,13 @@ void main() {
   LoginPresenter presenter;
   StreamController<String> emailErrorController;
   StreamController<String> passwordErrorController;
+  StreamController<bool> isFormValidController;
 
   Future loadPage(WidgetTester tester) async {
     presenter = LoginPresenterMock();
     emailErrorController = StreamController<String>();
     passwordErrorController = StreamController<String>();
+    isFormValidController = StreamController<bool>();
 
     when(presenter.emailErrorStream).thenAnswer(
       (_) => emailErrorController.stream,
@@ -27,6 +29,10 @@ void main() {
       (_) => passwordErrorController.stream,
     );
 
+    when(presenter.isFormValidStream).thenAnswer(
+      (_) => isFormValidController.stream,
+    );
+
     final loginPage = MaterialApp(home: LoginPage(presenter: presenter));
     await tester.pumpWidget(loginPage);
   }
@@ -34,6 +40,7 @@ void main() {
   tearDown(() {
     emailErrorController.close();
     passwordErrorController.close();
+    isFormValidController.close();
   });
 
   testWidgets(
@@ -122,8 +129,6 @@ void main() {
     },
   );
 
-  //
-
   testWidgets(
     'Shold presenter error is password invalid',
     (WidgetTester tester) async {
@@ -168,6 +173,19 @@ void main() {
         ),
         findsOneWidget,
       );
+    },
+  );
+
+  testWidgets(
+    'Shold enabled button if form is valid',
+    (WidgetTester tester) async {
+      await loadPage(tester);
+
+      isFormValidController.add(true);
+      await tester.pump();
+
+      final button = tester.widget<RaisedButton>(find.byType(RaisedButton));
+      expect(button.onPressed, isNotNull);
     },
   );
 }
