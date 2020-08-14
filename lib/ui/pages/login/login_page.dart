@@ -44,16 +44,24 @@ class LoginPage extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8, bottom: 32),
-                      child: TextFormField(
-                        obscureText: true,
-                        onChanged: presenter.validatePassword,
-                        decoration: InputDecoration(
-                          labelText: 'Senha',
-                          icon: Icon(
-                            Icons.lock_outline,
-                            color: Theme.of(context).primaryColorLight,
-                          ),
-                        ),
+                      child: StreamBuilder<String>(
+                        stream: presenter.passwordErrorStream,
+                        builder: (context, snapshot) {
+                          return TextFormField(
+                            obscureText: true,
+                            onChanged: presenter.validatePassword,
+                            decoration: InputDecoration(
+                              labelText: 'Senha',
+                              icon: Icon(
+                                Icons.lock_outline,
+                                color: Theme.of(context).primaryColorLight,
+                              ),
+                              errorText: snapshot.data?.isEmpty == true
+                                  ? null
+                                  : snapshot.data,
+                            ),
+                          );
+                        },
                       ),
                     ),
                     RaisedButton(
