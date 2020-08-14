@@ -6,7 +6,7 @@ class LoginHeader extends StatelessWidget {
     return Container(
       height: 240,
       margin: EdgeInsets.only(bottom: 32),
-      child: Icon(Icons.whatshot, size: 100),
+      child: Icon(Icons.whatshot, size: 100, color: Colors.white),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topRight,
