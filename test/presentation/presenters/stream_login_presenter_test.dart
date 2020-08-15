@@ -66,4 +66,19 @@ void main() {
     sut.validatePassword(password);
     verify(validation.validate(field: 'password', value: password)).called(1);
   });
+
+  test('Shold emit password error if validation fails', () {
+    mockValidation(value: 'error');
+
+    sut.passwordErrorStream.listen(
+      expectAsync1((error) => expect(error, 'error')),
+    );
+
+    sut.isFormValidStream.listen(
+      expectAsync1((isValid) => expect(isValid, false)),
+    );
+
+    sut.validatePassword(password);
+    sut.validatePassword(password);
+  });
 }
