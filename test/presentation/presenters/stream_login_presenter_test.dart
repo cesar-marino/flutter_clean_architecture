@@ -20,11 +20,17 @@ class StreamLoginPresenter {
 class ValidationMock extends Mock implements Validation {}
 
 void main() {
-  test('Shold call Validation with correct email', () {
-    final validation = ValidationMock();
-    final sut = StreamLoginPresenter(validation: validation);
-    final email = faker.internet.email();
+  StreamLoginPresenter sut;
+  ValidationMock validation;
+  String email;
 
+  setUp(() {
+    validation = ValidationMock();
+    sut = StreamLoginPresenter(validation: validation);
+    email = faker.internet.email();
+  });
+
+  test('Shold call Validation with correct email', () {
     sut.validateEmail(email);
 
     verify(validation.validate(field: 'email', value: email)).called(1);
