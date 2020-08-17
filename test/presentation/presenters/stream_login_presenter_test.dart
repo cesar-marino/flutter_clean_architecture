@@ -2,13 +2,18 @@ import 'package:faker/faker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import 'package:curso/domain/usecases/authentication.dart';
+
 import 'package:curso/presentation/presenters/presenters.dart';
 import 'package:curso/presentation/protocols/protocols.dart';
 
 class ValidationMock extends Mock implements Validation {}
 
+class AuthenticationMock extends Mock implements Authentication {}
+
 void main() {
   StreamLoginPresenter sut;
+  Authentication authentication;
   ValidationMock validation;
   String email;
   String password;
@@ -23,7 +28,11 @@ void main() {
 
   setUp(() {
     validation = ValidationMock();
-    sut = StreamLoginPresenter(validation: validation);
+    authentication = AuthenticationMock();
+    sut = StreamLoginPresenter(
+      validation: validation,
+      authentication: authentication,
+    );
     email = faker.internet.email();
     password = faker.internet.password();
     mockValidation();
@@ -130,5 +139,17 @@ void main() {
     sut.validateEmail(email);
     await Future.delayed(Duration.zero);
     sut.validatePassword(password);
+  });
+
+  test('Shold call authentication with correct values', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    await sut.auth();
+
+    verify(authentication.auth(AuthenticationParams(
+      email: email,
+      password: password,
+    ))).called(1);
   });
 }

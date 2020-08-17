@@ -23,6 +23,7 @@ environment:
 dependencies:
   http:
   provider:
+  equatable:
   flutter:
     sdk: flutter
   
