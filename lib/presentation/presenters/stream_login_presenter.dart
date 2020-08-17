@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:curso/domain/helpers/domain_error.dart';
 import 'package:meta/meta.dart';
 
+import '../../domain/helpers/domain_error.dart';
 import '../../domain/usecases/authentication.dart';
 
 import '../protocols/protocols.dart';
