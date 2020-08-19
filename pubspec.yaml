@@ -24,6 +24,7 @@ dependencies:
   http:
   provider:
   equatable:
+  get:
   flutter:
     sdk: flutter
   

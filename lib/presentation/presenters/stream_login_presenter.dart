@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
+import '../../ui/pages/pages.dart';
+
 import '../../domain/helpers/domain_error.dart';
 import '../../domain/usecases/authentication.dart';
 
@@ -22,7 +24,7 @@ class LoginState {
       passwordError == null;
 }
 
-class StreamLoginPresenter {
+class StreamLoginPresenter implements LoginPresenter {
   final Authentication authentication;
   final Validation validation;
   var _controller = StreamController<LoginState>.broadcast();
