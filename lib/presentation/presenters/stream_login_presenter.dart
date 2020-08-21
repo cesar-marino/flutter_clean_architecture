@@ -40,6 +40,9 @@ class StreamLoginPresenter implements LoginPresenter {
   Stream<String> get mainErrorStream =>
       _controller?.stream?.map((state) => state.mainError)?.distinct();
 
+  Stream<String> get navigateToStream =>
+      _controller?.stream?.map((state) => state.mainError)?.distinct();
+
   Stream<bool> get isFormValidStream =>
       _controller?.stream?.map((state) => state.isFormValid)?.distinct();
 
