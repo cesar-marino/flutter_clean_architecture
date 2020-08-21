@@ -4,13 +4,14 @@ import 'package:meta/meta.dart';
 import '../../ui/pages/pages.dart';
 
 import '../../domain/helpers/domain_error.dart';
-import '../../domain/usecases/authentication.dart';
+import '../../domain/usecases/usecases.dart';
 
 import '../protocols/protocols.dart';
 
 class GetxLoginPresenter extends GetxController implements LoginPresenter {
   final Authentication authentication;
   final Validation validation;
+  final SaveCurrentAccount saveCurrentAccount;
 
   String _email;
   String _password;
@@ -29,6 +30,7 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
   GetxLoginPresenter({
     @required this.validation,
     @required this.authentication,
+    @required this.saveCurrentAccount,
   });
 
   void validateEmail(String email) {
@@ -57,10 +59,12 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
     try {
       _isLoading.value = true;
 
-      await authentication.auth(AuthenticationParams(
+      final account = await authentication.auth(AuthenticationParams(
         email: _email,
         password: _password,
       ));
+
+      await saveCurrentAccount.save(account);
     } on DomainError catch (error) {
       _mainError.value = error.description;
     } finally {

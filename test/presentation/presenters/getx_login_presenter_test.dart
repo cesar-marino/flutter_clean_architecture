@@ -4,21 +4,25 @@ import 'package:test/test.dart';
 
 import 'package:curso/domain/entities/entities.dart';
 import 'package:curso/domain/helpers/helpers.dart';
-import 'package:curso/domain/usecases/authentication.dart';
+import 'package:curso/domain/usecases/usecases.dart';
 
 import 'package:curso/presentation/presenters/presenters.dart';
 import 'package:curso/presentation/protocols/protocols.dart';
 
-class ValidationMock extends Mock implements Validation {}
+class ValidationSpy extends Mock implements Validation {}
 
-class AuthenticationMock extends Mock implements Authentication {}
+class AuthenticationSpy extends Mock implements Authentication {}
+
+class SaveCurrentAccountSpy extends Mock implements SaveCurrentAccount {}
 
 void main() {
   GetxLoginPresenter sut;
   Authentication authentication;
-  ValidationMock validation;
+  ValidationSpy validation;
+  SaveCurrentAccountSpy saveCurrentAccount;
   String email;
   String password;
+  String token;
 
   PostExpectation mockValidationCall(String field) => when(validation.validate(
       field: field == null ? anyNamed('field') : field,
@@ -32,7 +36,7 @@ void main() {
 
   void mockAuthentication() {
     mockAuthenticationCall().thenAnswer(
-      (_) async => AccountEntity(faker.guid.guid()),
+      (_) async => AccountEntity(token),
     );
   }
 
@@ -41,14 +45,17 @@ void main() {
   }
 
   setUp(() {
-    validation = ValidationMock();
-    authentication = AuthenticationMock();
+    validation = ValidationSpy();
+    authentication = AuthenticationSpy();
+    saveCurrentAccount = SaveCurrentAccountSpy();
     sut = GetxLoginPresenter(
       validation: validation,
       authentication: authentication,
+      saveCurrentAccount: saveCurrentAccount,
     );
     email = faker.internet.email();
     password = faker.internet.password();
+    token = faker.guid.guid();
     mockValidation();
     mockAuthentication();
   });
@@ -166,6 +173,15 @@ void main() {
       email: email,
       password: password,
     ))).called(1);
+  });
+
+  test('Shold call SaveCurrentAccount with correct value', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    await sut.auth();
+
+    verify(saveCurrentAccount.save(AccountEntity(token))).called(1);
   });
 
   test('Shold emit correct events on Authentication success', () async {
