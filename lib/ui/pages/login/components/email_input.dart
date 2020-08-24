@@ -1,3 +1,4 @@
+import 'package:curso/ui/helpers/i18n/i18n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,7 @@ class EmailInput extends StatelessWidget {
         return TextFormField(
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            labelText: 'Email',
+            labelText: R.strings.email,
             errorText: snapshot.hasData ? snapshot.data.description : null,
             icon: Icon(
               Icons.mail_outline,
