@@ -9,6 +9,8 @@ import 'package:curso/domain/usecases/usecases.dart';
 import 'package:curso/presentation/presenters/presenters.dart';
 import 'package:curso/presentation/protocols/protocols.dart';
 
+import 'package:curso/ui/helpers/errors/errors.dart';
+
 class ValidationSpy extends Mock implements Validation {}
 
 class AuthenticationSpy extends Mock implements Authentication {}
@@ -28,7 +30,7 @@ void main() {
       field: field == null ? anyNamed('field') : field,
       value: anyNamed('value')));
 
-  void mockValidation({String field, String value}) {
+  void mockValidation({String field, ValidationError value}) {
     mockValidationCall(field).thenReturn(value);
   }
 
@@ -72,11 +74,26 @@ void main() {
     verify(validation.validate(field: 'email', value: email)).called(1);
   });
 
-  test('Shold emit email error if validation fails', () {
-    mockValidation(value: 'error');
+  test('Shold emit invalidFieldError if email is invalid', () {
+    mockValidation(value: ValidationError.invalidField);
 
     sut.emailErrorStream.listen(
-      expectAsync1((error) => expect(error, 'error')),
+      expectAsync1((error) => expect(error, UIError.invalidField)),
+    );
+
+    sut.isFormValidStream.listen(
+      expectAsync1((isValid) => expect(isValid, false)),
+    );
+
+    sut.validateEmail(email);
+    sut.validateEmail(email);
+  });
+
+  test('Shold emit requiredFieldError if email is empty', () {
+    mockValidation(value: ValidationError.requiredField);
+
+    sut.emailErrorStream.listen(
+      expectAsync1((error) => expect(error, UIError.requiredField)),
     );
 
     sut.isFormValidStream.listen(
@@ -106,10 +123,10 @@ void main() {
   });
 
   test('Shold emit password error if validation fails', () {
-    mockValidation(value: 'error');
+    mockValidation(value: ValidationError.requiredField);
 
     sut.passwordErrorStream.listen(
-      expectAsync1((error) => expect(error, 'error')),
+      expectAsync1((error) => expect(error, UIError.requiredField)),
     );
 
     sut.isFormValidStream.listen(
@@ -133,18 +150,8 @@ void main() {
     sut.validatePassword(password);
   });
 
-  //
-
-  test('Shold emit email error if validation fails', () {
-    mockValidation(field: 'email', value: 'error');
-
-    sut.emailErrorStream.listen(
-      expectAsync1((error) => expect(error, 'error')),
-    );
-
-    sut.passwordErrorStream.listen(
-      expectAsync1((error) => expect(error, null)),
-    );
+  test('Shold disable form button if any field is invalid', () {
+    mockValidation(field: 'email', value: ValidationError.invalidField);
 
     sut.isFormValidStream.listen(
       expectAsync1((isValid) => expect(isValid, false)),
@@ -154,15 +161,7 @@ void main() {
     sut.validatePassword(password);
   });
 
-  test('Shold emit email error if validation fails', () async {
-    sut.emailErrorStream.listen(
-      expectAsync1((error) => expect(error, null)),
-    );
-
-    sut.passwordErrorStream.listen(
-      expectAsync1((error) => expect(error, null)),
-    );
-
+  test('Shold enabled form button if all field are valid', () async {
     expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
 
     sut.validateEmail(email);
@@ -199,7 +198,7 @@ void main() {
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
 
     sut.mainErrorStream.listen(
-      expectAsync1((error) => expect(error, 'Algo de errado não esta certo')),
+      expectAsync1((error) => expect(error, UIError.unexpeted)),
     );
 
     await sut.auth();
@@ -233,7 +232,7 @@ void main() {
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
 
     sut.mainErrorStream.listen(
-      expectAsync1((error) => expect(error, 'Credenciais inválidas.')),
+      expectAsync1((error) => expect(error, UIError.invalidCredentials)),
     );
 
     await sut.auth();
@@ -247,7 +246,7 @@ void main() {
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
 
     sut.mainErrorStream.listen(
-      expectAsync1((error) => expect(error, 'Algo de errado não esta certo')),
+      expectAsync1((error) => expect(error, UIError.unexpeted)),
     );
 
     await sut.auth();

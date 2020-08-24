@@ -1,6 +1,7 @@
 import 'package:faker/faker.dart';
 import 'package:test/test.dart';
 
+import 'package:curso/presentation/protocols/protocols.dart';
 import 'package:curso/validation/validators/validators.dart';
 
 void main() {
@@ -23,6 +24,6 @@ void main() {
   });
 
   test('Shold return error if email is invalid', () {
-    expect(sut.validate('cesar.marino'), 'Campo inválido');
+    expect(sut.validate('cesar.marino'), ValidationError.invalidField);
   });
 }
