@@ -20,7 +20,7 @@ class GetxSplashPresenter implements SplashPresenter {
 
     try {
       final account = await loadCurrentAccount.load();
-      _navigateTo.value = account == null ? '/login' : '/surveys';
+      _navigateTo.value = !account.isNull ? '/login' : '/surveys';
     } catch (error) {
       _navigateTo.value = '/login';
     }
