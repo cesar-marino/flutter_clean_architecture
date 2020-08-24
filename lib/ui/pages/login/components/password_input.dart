@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../helpers/errors/errors.dart';
-
+import 'package:curso/ui/helpers/helpers.dart';
 import '../login_presenter.dart';
 
 class PasswordInput extends StatelessWidget {
@@ -17,7 +16,7 @@ class PasswordInput extends StatelessWidget {
           obscureText: true,
           onChanged: presenter.validatePassword,
           decoration: InputDecoration(
-            labelText: 'Senha',
+            labelText: R.strings.password,
             icon: Icon(
               Icons.lock_outline,
               color: Theme.of(context).primaryColorLight,

@@ -272,7 +272,7 @@ void main() {
       mainErrorController.add(UIError.unexpeted);
       await tester.pump();
 
-      expect(find.text('Algo de errado não esta certo'), findsOneWidget);
+      expect(find.text('Algo de errado não está certo'), findsOneWidget);
     },
   );
 

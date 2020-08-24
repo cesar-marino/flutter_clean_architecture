@@ -13,12 +13,12 @@ extension UIErrorExtension on UIError {
       case UIError.requiredField:
         return R.strings.msgRequiredField;
       case UIError.invalidField:
-        return 'Campo inválido';
+        return R.strings.msgInvalidField;
       case UIError.invalidCredentials:
-        return 'Credenciais inválidas';
+        return R.strings.msgInvalidCredentials;
       case UIError.unexpeted:
       default:
-        return 'Algo de errado não esta certo';
+        return R.strings.msgUnexpetedError;
     }
   }
 }

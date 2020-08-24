@@ -1,8 +1,7 @@
-import 'package:curso/ui/helpers/i18n/i18n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../helpers/errors/errors.dart';
+import '../../../helpers/helpers.dart';
 
 import '../login_presenter.dart';
 
