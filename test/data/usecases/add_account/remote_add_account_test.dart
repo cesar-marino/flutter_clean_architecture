@@ -66,4 +66,12 @@ void main() {
 
     expect(future, throwsA(DomainError.unexpected));
   });
+
+  test('Shold throw UnexpectedError if HttpClient return 500', () async {
+    mockHttpError(HttpError.serverError);
+
+    final future = sut.add(params);
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
 }
