@@ -58,4 +58,12 @@ void main() {
 
     expect(future, throwsA(DomainError.unexpected));
   });
+
+  test('Shold throw UnexpectedError if HttpClient return 404', () async {
+    mockHttpError(HttpError.notFound);
+
+    final future = sut.add(params);
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
 }
