@@ -111,7 +111,7 @@ void main() {
   );
 
   testWidgets(
-    'Shold call validates with correct values',
+    'Shold call validate with correct values',
     (WidgetTester tester) async {
       await loadPage(tester);
 
