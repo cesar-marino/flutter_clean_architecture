@@ -10,6 +10,7 @@ import '../protocols/protocols.dart';
 class GetxSignUpPresenter extends GetxController {
   final Validation validation;
   final AddAccount addAccount;
+  final SaveCurrentAccount saveCurrentAccount;
 
   var _nameError = Rx<UIError>();
   var _emailError = Rx<UIError>();
@@ -29,7 +30,11 @@ class GetxSignUpPresenter extends GetxController {
       _passwordConfirmationError.stream;
   Stream<bool> get isFormValidStream => _isFormValid.stream;
 
-  GetxSignUpPresenter({@required this.validation, @required this.addAccount});
+  GetxSignUpPresenter({
+    @required this.validation,
+    @required this.addAccount,
+    @required this.saveCurrentAccount,
+  });
 
   void validateName(String name) {
     _name = name;
@@ -82,11 +87,13 @@ class GetxSignUpPresenter extends GetxController {
   }
 
   Future<void> signUp() async {
-    await addAccount.add(AddAccountParams(
+    final account = await addAccount.add(AddAccountParams(
       name: _name,
       email: _email,
       password: _password,
       passwordConfirmation: _passwordConfirmation,
     ));
+
+    await saveCurrentAccount.save(account);
   }
 }
