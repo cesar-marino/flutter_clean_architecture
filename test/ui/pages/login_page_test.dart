@@ -227,7 +227,10 @@ void main() {
 
       isFormValidController.add(true);
       await tester.pump();
-      await tester.tap(find.byType(RaisedButton));
+
+      var button = find.byType(RaisedButton);
+      await tester.ensureVisible(button);
+      await tester.tap(button);
       await tester.pump();
       verify(presenter.auth()).called(1);
     },

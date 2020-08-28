@@ -249,4 +249,17 @@ void main() {
       expect(button.onPressed, isNull);
     },
   );
+
+  testWidgets('Shold call SignUp on form submit', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    isFormValidController.add(true);
+    await tester.pump();
+    
+    var button = find.byType(RaisedButton);
+    await tester.ensureVisible(button);
+    await tester.tap(button);
+    await tester.pump();
+    verify(presenter.signUp()).called(1);
+  });
 }
