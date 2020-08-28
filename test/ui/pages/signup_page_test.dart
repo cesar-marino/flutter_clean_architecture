@@ -17,6 +17,7 @@ void main() {
   StreamController<UIError> emailErrorController;
   StreamController<UIError> passwordErrorController;
   StreamController<UIError> passwordConfirmationErrorController;
+  StreamController<UIError> mainErrorController;
   StreamController<bool> isFormValidController;
   StreamController<bool> isLoadingController;
 
@@ -25,6 +26,7 @@ void main() {
     emailErrorController = StreamController<UIError>();
     passwordErrorController = StreamController<UIError>();
     passwordConfirmationErrorController = StreamController<UIError>();
+    mainErrorController = StreamController<UIError>();
     isFormValidController = StreamController<bool>();
     isLoadingController = StreamController<bool>();
   }
@@ -46,6 +48,10 @@ void main() {
       (_) => passwordConfirmationErrorController.stream,
     );
 
+    when(presenter.mainErrorStream).thenAnswer(
+      (_) => mainErrorController.stream,
+    );
+
     when(presenter.isFormValidStream).thenAnswer(
       (_) => isFormValidController.stream,
     );
@@ -60,6 +66,7 @@ void main() {
     emailErrorController.close();
     passwordErrorController.close();
     passwordConfirmationErrorController.close();
+    mainErrorController.close();
     isFormValidController.close();
     isLoadingController.close();
   }
@@ -287,5 +294,25 @@ void main() {
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('Shold present error message if signUp fails',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    mainErrorController.add(UIError.emailInUse);
+    await tester.pump();
+
+    expect(find.text('O email já está em uso'), findsOneWidget);
+  });
+
+  testWidgets('Shold present error message if signUp throws',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    mainErrorController.add(UIError.unexpeted);
+    await tester.pump();
+
+    expect(find.text('Algo de errado não está certo'), findsOneWidget);
   });
 }
