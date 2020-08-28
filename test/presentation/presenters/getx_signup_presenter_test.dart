@@ -45,10 +45,6 @@ void main() {
   PostExpectation mockSaveCurrentAccountCall() =>
       when(saveCurrentAccount.save(any));
 
-  void mockSaveCurrentAccount() {
-    mockSaveCurrentAccountCall().thenAnswer((_) async => AccountEntity(token));
-  }
-
   void mockSaveCurrentAccountError() {
     mockSaveCurrentAccountCall().thenThrow(DomainError.unexpected);
   }
@@ -313,5 +309,21 @@ void main() {
     await sut.signUp();
 
     verify(saveCurrentAccount.save(AccountEntity(token))).called(1);
+  });
+
+  test('Shold emit UnexpectedError if SaveCurrentAccount fails', () async {
+    mockSaveCurrentAccountError();
+    sut.validateName(name);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+
+    sut.mainErrorStream.listen(
+      expectAsync1((error) => expect(error, UIError.unexpeted)),
+    );
+
+    await sut.signUp();
   });
 }
