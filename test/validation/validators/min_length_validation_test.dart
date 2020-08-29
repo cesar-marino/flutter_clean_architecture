@@ -8,9 +8,7 @@ import 'package:curso/validation/validators/validators.dart';
 void main() {
   MinLengthValidation sut;
 
-  setUp(() {
-    sut = MinLengthValidation(field: 'any_field', size: 5);
-  });
+  setUp(() => sut = MinLengthValidation(field: 'any_field', size: 5));
 
   test('Should return error if value is empty', () {
     expect(sut.validate({'any_field': ''}), ValidationError.invalidField);

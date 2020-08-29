@@ -11,6 +11,10 @@ void main() {
     sut = EmailValidation('any_field');
   });
 
+  test('Shold return null on invalid case', () {
+    expect(sut.validate({}), null);
+  });
+
   test('Shold return null if email is empty', () {
     expect(sut.validate({'any_field': ''}), null);
   });
