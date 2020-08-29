@@ -12,18 +12,21 @@ void main() {
   });
 
   test('Shold return null if email is empty', () {
-    expect(sut.validate(''), null);
+    expect(sut.validate({'any_field': ''}), null);
   });
 
   test('Shold return null if email is null', () {
-    expect(sut.validate(null), null);
+    expect(sut.validate({'any_field': null}), null);
   });
 
   test('Shold return null if email is valid', () {
-    expect(sut.validate(faker.internet.email()), null);
+    expect(sut.validate({'any_field': faker.internet.email()}), null);
   });
 
   test('Shold return error if email is invalid', () {
-    expect(sut.validate('cesar.marino'), ValidationError.invalidField);
+    expect(
+      sut.validate({'any_field': 'cesar.marino'}),
+      ValidationError.invalidField,
+    );
   });
 }

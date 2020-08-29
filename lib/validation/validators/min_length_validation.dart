@@ -15,8 +15,8 @@ class MinLengthValidation extends Equatable implements FieldValidation {
   List<Object> get props => [field, size];
 
   @override
-  ValidationError validate(String value) {
-    return value != null && value.length >= 5
+  ValidationError validate(Map input) {
+    return input[field] != null && input[field].length >= 5
         ? null
         : ValidationError.invalidField;
   }
