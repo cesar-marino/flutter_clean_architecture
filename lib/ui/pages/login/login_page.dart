@@ -62,7 +62,7 @@ class LoginPage extends StatelessWidget {
                             ),
                             LoginButton(),
                             FlatButton.icon(
-                              onPressed: () {},
+                              onPressed: presenter.goToSignUp,
                               icon: Icon(Icons.person_outline),
                               label: Text(R.strings.addAccount),
                             )

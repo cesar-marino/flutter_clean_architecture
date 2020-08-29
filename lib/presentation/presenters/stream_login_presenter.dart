@@ -109,6 +109,8 @@ class StreamLoginPresenter implements LoginPresenter {
     }
   }
 
+  void goToSignUp() {}
+
   void dispose() {
     _controller?.close();
     _controller = null;
