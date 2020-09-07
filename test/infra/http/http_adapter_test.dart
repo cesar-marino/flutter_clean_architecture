@@ -210,5 +210,11 @@ void main() {
       var future = sut.request(url: url, method: 'get');
       expect(future, throwsA(HttpError.notFound));
     });
+
+    test('Shuld return ServerError if get returns 500', () async {
+      mockResponse(500);
+      var future = sut.request(url: url, method: 'get');
+      expect(future, throwsA(HttpError.serverError));
+    });
   });
 }
