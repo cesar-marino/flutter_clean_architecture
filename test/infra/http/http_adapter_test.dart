@@ -157,5 +157,16 @@ void main() {
         'accept': 'application/json',
       }));
     });
+
+    test('Shuld return data if get returns 200', () async {
+      var response = await sut.request(url: url, method: 'get');
+      expect(response, {'any_key': 'any_value'});
+    });
+
+    test('Shuld return null if get returns 200 with no data', () async {
+      mockResponse(200, body: '');
+      var response = await sut.request(url: url, method: 'get');
+      expect(response, null);
+    });
   });
 }
