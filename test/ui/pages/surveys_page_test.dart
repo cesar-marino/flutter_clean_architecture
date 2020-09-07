@@ -3,13 +3,15 @@ import 'package:get/get.dart';
 
 import 'package:curso/ui/pages/pages.dart';
 import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
 
 class SurveysPresenterSpy extends Mock implements SurveysPresenter {}
 
 void main() {
-  testWidgets('Should call LoadSurveys on page load',
-      (WidgetTester tester) async {
-    final presenter = SurveysPresenterSpy();
+  SurveysPresenterSpy presenter;
+
+  Future<void> loadPage(WidgetTester tester) async {
+    presenter = SurveysPresenterSpy();
     final surveysPage = GetMaterialApp(
       initialRoute: '/surveys',
       getPages: [
@@ -21,7 +23,13 @@ void main() {
     );
 
     await tester.pumpWidget(surveysPage);
+  }
 
+  testWidgets('Should call LoadSurveys on page load',
+      (WidgetTester tester) async {
+    await loadPage(tester);
     verify(presenter.loadData()).called(1);
   });
+
+  
 }
