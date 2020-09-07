@@ -18,11 +18,17 @@ class RemoteLoadSurveys {
 class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
-  test('Should call HttpClient with correct values', () async {
-    final url = faker.internet.httpUrl();
-    final httpClient = HttpClientSpy();
-    final sut = RemoteLoadSurveys(httpClient: httpClient, url: url);
+  String url;
+  HttpClient httpClient;
+  RemoteLoadSurveys sut;
 
+  setUp(() {
+    url = faker.internet.httpUrl();
+    httpClient = HttpClientSpy();
+    sut = RemoteLoadSurveys(httpClient: httpClient, url: url);
+  });
+
+  test('Should call HttpClient with correct values', () async {
     await sut.load();
 
     verify(httpClient.request(url: url, method: 'get')).called(1);
