@@ -145,6 +145,8 @@ void main() {
       mockRequest().thenAnswer((_) async => Response(body, statusCode));
     }
 
+    void mockError() => mockRequest().thenThrow(Exception);
+
     setUp(() {
       mockResponse(200);
     });
@@ -213,6 +215,12 @@ void main() {
 
     test('Shuld return ServerError if get returns 500', () async {
       mockResponse(500);
+      var future = sut.request(url: url, method: 'get');
+      expect(future, throwsA(HttpError.serverError));
+    });
+
+    test('Shuld return ServerError if get throws', () async {
+      mockError();
       var future = sut.request(url: url, method: 'get');
       expect(future, throwsA(HttpError.serverError));
     });
