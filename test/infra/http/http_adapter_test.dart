@@ -180,5 +180,17 @@ void main() {
       var response = await sut.request(url: url, method: 'get');
       expect(response, null);
     });
+
+    test('Shuld return BadRequestError if get returns 400', () async {
+      mockResponse(400, body: '');
+      var future = sut.request(url: url, method: 'get');
+      expect(future, throwsA(HttpError.badRequest));
+    });
+
+    test('Shuld return BadRequestError if get returns 400', () async {
+      mockResponse(400);
+      var future = sut.request(url: url, method: 'get');
+      expect(future, throwsA(HttpError.badRequest));
+    });
   });
 }
