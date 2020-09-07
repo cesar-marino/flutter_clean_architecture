@@ -168,5 +168,17 @@ void main() {
       var response = await sut.request(url: url, method: 'get');
       expect(response, null);
     });
+
+    test('Shuld return null if get returns 204', () async {
+      mockResponse(204, body: '');
+      var response = await sut.request(url: url, method: 'get');
+      expect(response, null);
+    });
+
+    test('Shuld return null if get returns 204 with data', () async {
+      mockResponse(204);
+      var response = await sut.request(url: url, method: 'get');
+      expect(response, null);
+    });
   });
 }
