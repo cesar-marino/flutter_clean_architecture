@@ -204,5 +204,11 @@ void main() {
       var future = sut.request(url: url, method: 'get');
       expect(future, throwsA(HttpError.forbidden));
     });
+
+    test('Shuld return NotFoundError if get returns 404', () async {
+      mockResponse(404);
+      var future = sut.request(url: url, method: 'get');
+      expect(future, throwsA(HttpError.notFound));
+    });
   });
 }
