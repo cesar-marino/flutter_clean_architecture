@@ -13,11 +13,11 @@ class SurveysPresenterSpy extends Mock implements SurveysPresenter {}
 void main() {
   SurveysPresenterSpy presenter;
   StreamController<bool> isLoadingController;
-  StreamController<List<SurveyViewModel>> loadSurveysController;
+  StreamController<List<SurveyViewModel>> surveysController;
 
   void initStreams() {
     isLoadingController = StreamController<bool>();
-    loadSurveysController = StreamController<List<SurveyViewModel>>();
+    surveysController = StreamController<List<SurveyViewModel>>();
   }
 
   void mockStreams() {
@@ -25,14 +25,14 @@ void main() {
       (_) => isLoadingController.stream,
     );
 
-    when(presenter.loadSurveysStream).thenAnswer(
-      (_) => loadSurveysController.stream,
+    when(presenter.surveysStream).thenAnswer(
+      (_) => surveysController.stream,
     );
   }
 
   void closeStreams() {
     isLoadingController.close();
-    loadSurveysController.close();
+    surveysController.close();
   }
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -103,7 +103,7 @@ void main() {
       (WidgetTester tester) async {
     await loadPage(tester);
 
-    loadSurveysController.addError(UIError.unexpeted.description);
+    surveysController.addError(UIError.unexpeted.description);
     await tester.pump();
 
     expect(find.text('Algo de errado não está certo'), findsOneWidget);
@@ -115,7 +115,7 @@ void main() {
       (WidgetTester tester) async {
     await loadPage(tester);
 
-    loadSurveysController.add(makeSurveys());
+    surveysController.add(makeSurveys());
     await tester.pump();
 
     expect(find.text('Algo de errado não está certo'), findsNothing);
@@ -130,7 +130,7 @@ void main() {
       (WidgetTester tester) async {
     await loadPage(tester);
 
-    loadSurveysController.addError(UIError.unexpeted.description);
+    surveysController.addError(UIError.unexpeted.description);
     await tester.pump();
     await tester.tap(find.text('Recarregar'));
 
