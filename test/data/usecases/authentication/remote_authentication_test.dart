@@ -8,7 +8,7 @@ import 'package:curso/domain/usecases/usecases.dart';
 import 'package:curso/data/usecases/usecases.dart';
 import 'package:curso/data/http/http.dart';
 
-class HttpCLientMock extends Mock implements HttpClient<Map> {}
+class HttpCLientMock extends Mock implements HttpClient {}
 
 void main() {
   HttpCLientMock httpClient;

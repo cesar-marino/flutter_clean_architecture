@@ -8,11 +8,11 @@ import 'package:curso/domain/helpers/helpers.dart';
 import 'package:curso/data/http/http.dart';
 import 'package:curso/data/usecases/usecases.dart';
 
-class HttpClientSpy extends Mock implements HttpClient<List<Map>> {}
+class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
   RemoteLoadSurveys sut;
-  HttpClient<List<Map>> httpClient;
+  HttpClient httpClient;
   String url;
   List<Map> list;
 
