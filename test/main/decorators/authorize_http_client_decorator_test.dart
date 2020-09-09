@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'package:curso/data/cache/cache.dart';
 import 'package:curso/data/http/http.dart';
 
-class AuthorizeHttpClientDecorator {
+class AuthorizeHttpClientDecorator implements HttpClient {
   final FetchSecureCacheStorage fetchSecureCacheStorage;
   final HttpClient decoratee;
 
@@ -15,22 +15,27 @@ class AuthorizeHttpClientDecorator {
     @required this.decoratee,
   });
 
-  Future<void> request({
+  @override
+  Future<dynamic> request({
     @required String url,
     @required String method,
     Map body,
     Map headers,
   }) async {
-    final token = await fetchSecureCacheStorage.fetchSecure('token');
-    final authorizedHeaders = headers ?? {}
-      ..addAll({'x-access-token': token});
+    try {
+      final token = await fetchSecureCacheStorage.fetchSecure('token');
+      final authorizedHeaders = headers ?? {}
+        ..addAll({'x-access-token': token});
 
-    await decoratee.request(
-      url: url,
-      method: method,
-      body: body,
-      headers: authorizedHeaders,
-    );
+      return await decoratee.request(
+        url: url,
+        method: method,
+        body: body,
+        headers: authorizedHeaders,
+      );
+    } catch (error) {
+      throw HttpError.forbidden;
+    }
   }
 }
 
@@ -47,11 +52,26 @@ void main() {
   String method;
   Map body;
   String token;
+  String httpResponse;
+
+  PostExpectation mockTokenCall() =>
+      when(fetchSecureCacheStorage.fetchSecure(any));
 
   void mockToken() {
     token = faker.guid.guid();
-    when(fetchSecureCacheStorage.fetchSecure(any))
-        .thenAnswer((_) async => token);
+    mockTokenCall().thenAnswer((_) async => token);
+  }
+
+  void mockTokenError() => mockTokenCall().thenThrow(Exception());
+
+  void mockHttpResponse() {
+    httpResponse = faker.randomGenerator.string(50);
+    when(httpClient.request(
+      url: anyNamed('url'),
+      method: anyNamed('url'),
+      body: anyNamed('body'),
+      headers: anyNamed('headers'),
+    )).thenAnswer((_) async => httpResponse);
   }
 
   setUp(() {
@@ -65,6 +85,7 @@ void main() {
     method = faker.randomGenerator.string(10);
     body = {'any_key': 'any_value'};
     mockToken();
+    mockHttpResponse();
   });
 
   test('Should call FetchSecureCacheStorage with correct key', () async {
@@ -94,5 +115,20 @@ void main() {
       body: body,
       headers: {'x-access-token': token, 'any_header': 'any_value'},
     )).called(1);
+  });
+
+  test('Should return same result as decoratee', () async {
+    final response = await sut.request(url: url, method: method, body: body);
+
+    expect(response, httpResponse);
+  });
+
+  test('Should throw ForbiddenError if FetchSecureCacheStorage thorws',
+      () async {
+    mockTokenError();
+
+    final future = sut.request(url: url, method: method, body: body);
+
+    expect(future, throwsA(HttpError.forbidden));
   });
 }
