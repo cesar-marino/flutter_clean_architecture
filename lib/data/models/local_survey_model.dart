@@ -1,9 +1,8 @@
-import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../domain/entities/entities.dart';
 
-class LocalSurveyModel extends Equatable {
+class LocalSurveyModel {
   final String id;
   final String question;
   final DateTime date;
@@ -15,9 +14,6 @@ class LocalSurveyModel extends Equatable {
     @required this.date,
     @required this.didAnswer,
   });
-
-  @override
-  List<Object> get props => ['id', 'question', 'date', 'didAnswer'];
 
   factory LocalSurveyModel.fromJson(Map json) {
     return LocalSurveyModel(
