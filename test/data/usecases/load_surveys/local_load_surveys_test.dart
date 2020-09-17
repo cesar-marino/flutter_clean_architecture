@@ -1,3 +1,4 @@
+import 'package:curso/data/cache/cache.dart';
 import 'package:curso/data/models/models.dart';
 import 'package:curso/domain/entities/entities.dart';
 import 'package:curso/domain/helpers/helpers.dart';
@@ -25,10 +26,6 @@ class LocalLoadSurveys {
       throw DomainError.unexpected;
     }
   }
-}
-
-abstract class FetchCacheStorage {
-  Future<dynamic> fetch(String key);
 }
 
 class FetchCacheStorageSpy extends Mock implements FetchCacheStorage {}
