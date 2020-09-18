@@ -68,10 +68,25 @@ void main() {
   });
 
   group('Fetch', () {
+    String result;
+
+    void mockFetch() =>
+        when(localStorage.getItem(any)).thenAnswer((_) async => result);
+
+    setUp(() {
+      mockFetch();
+    });
+
     test('Should call LocalStorage with correct value', () async {
       await sut.fetch(key);
 
       verify(localStorage.getItem(key)).called(1);
+    });
+
+    test('Should return same value as LocalStorage', () async {
+      final data = await sut.fetch(key);
+
+      expect(data, result);
     });
   });
 }
