@@ -4,7 +4,8 @@ import 'package:test/test.dart';
 import 'package:curso/presentation/protocols/protocols.dart';
 
 import 'package:curso/validation/protocols/protocols.dart';
-import 'package:curso/validation/validators/validators.dart';
+
+import 'package:curso/main/composites/composites.dart';
 
 class FieldValidationMock extends Mock implements FieldValidation {}
 
