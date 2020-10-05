@@ -5,10 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Flutter",
-            "program": "lib/main.dart",
+            "name": "Curso",
+            "program": "lib/main/main.dart",
             "request": "launch",
             "type": "dart"
-        }
+        },
+        {
+            "name": "Tests",
+            "program": "test",
+            "request": "launch",
+            "type": "dart"
+        },
     ]
 }
